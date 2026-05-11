@@ -9,10 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/hello")
 public class HelloController {
 
-    public static final String DEFAULT_NAME = "Anónimo";
+    public static final String DEFAULT_NAME = "Guest";
+
+    private HelloController() {
+    }
+
+    public static HelloController createHelloController() {
+        return new HelloController();
+    }
 
     @GetMapping
     public String hello(@RequestParam(defaultValue = DEFAULT_NAME) String name) {
-        return "Hello " + (name == null ? DEFAULT_NAME : name);
+        return "Hello " + (name == null || name.isBlank() ? DEFAULT_NAME : name);
     }
 }

@@ -1,0 +1,21 @@
+meta {
+  name: Get User by Id
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/users/1
+  body: none
+  auth: none
+}
+
+tests {
+  test("should return status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return a user object", function() {
+    expect(res.getBody()).to.be.an("object");
+  });
+}

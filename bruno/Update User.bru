@@ -1,0 +1,30 @@
+meta {
+  name: Update User
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/users/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Jane Doe",
+    "registrationDate": "2024-06-20"
+  }
+}
+
+tests {
+  test("should return status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return the updated user", function() {
+    const body = res.getBody();
+    expect(body).to.be.an("object");
+    expect(body.name).to.equal("Jane Doe");
+  });
+}

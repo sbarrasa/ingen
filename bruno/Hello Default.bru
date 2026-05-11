@@ -1,0 +1,21 @@
+meta {
+  name: Hello Default
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/hello
+  body: none
+  auth: none
+}
+
+tests {
+  test("should return status 200", function() {
+    expect(res.getStatus()).to.equal(200);
+  });
+
+  test("should return default greeting", function() {
+    expect(res.getBody()).to.equal("Hello Guest");
+  });
+}

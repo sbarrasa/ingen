@@ -6,6 +6,7 @@ import com.accenture.springboot.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,11 +24,6 @@ public class UserService {
                 .toList();
     }
 
-    public UserDto getById(Integer id) {
-        return userRepository.findById(id)
-                .map(this::toDto)
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
 
     public UserDto create(UserDto user) {
         Integer id = user.id();
@@ -43,28 +39,31 @@ public class UserService {
         return toDto(userRepository.save(toDocument(user)));
     }
 
+    public UserDto getById(Integer id) {
+        return toDto(findUser(id));
+    }
+
     public UserDto update(Integer id, UserDto user) {
-        return userRepository.findById(id)
-                .map(existingUser -> new UserDocument(
-                        existingUser.id(),
-                        user.name(),
-                        user.registrationDate()
-                ))
+        UserDocument updatedUser = new UserDocument(
+                id,
+                user.name(),
+                user.registrationDate()
+        );
+
+        return Optional.of(updatedUser)
                 .map(userRepository::save)
                 .map(this::toDto)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public void delete(Integer id) {
-        userRepository.findById(id)
-                .ifPresentOrElse(
-                        userRepository::delete,
-                        () -> {
-                            throw new UserNotFoundException(id);
-                        }
-                );
+        userRepository.delete(findUser(id));
     }
 
+    private UserDocument findUser(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
     private UserDto toDto(UserDocument document) {
         return new UserDto(
                 document.id(),

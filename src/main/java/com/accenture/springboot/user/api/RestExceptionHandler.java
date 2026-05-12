@@ -1,5 +1,7 @@
-package com.accenture.springboot.exception;
+package com.accenture.springboot.user.api;
 
+import com.accenture.springboot.user.service.UserAlreadyExistsException;
+import com.accenture.springboot.user.service.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class RestExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException exception) {

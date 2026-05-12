@@ -1,7 +1,6 @@
-package com.accenture.springboot.controller;
+package com.accenture.springboot.user.api;
 
-import com.accenture.springboot.dto.UserDto;
-import com.accenture.springboot.service.UserService;
+import com.accenture.springboot.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

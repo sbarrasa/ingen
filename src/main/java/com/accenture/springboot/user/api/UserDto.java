@@ -1,4 +1,4 @@
-package com.accenture.springboot.dto;
+package com.accenture.springboot.user.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

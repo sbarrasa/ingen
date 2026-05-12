@@ -1,4 +1,4 @@
-package com.accenture.springboot.document;
+package com.accenture.springboot.user.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

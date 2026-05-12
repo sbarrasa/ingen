@@ -1,4 +1,4 @@
-package com.accenture.springboot.exception;
+package com.accenture.springboot.user.service;
 
 public class UserNotFoundException extends RuntimeException {
 

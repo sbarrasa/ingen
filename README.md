@@ -2,20 +2,14 @@
 
 Java 21 REST API POC using Spring Boot, MongoDB, records and lambdas.
 
-## Infrastructure (Local Development)
+## Infraestructura (Modo Autónomo)
 
-The project includes a `compose.yaml` file to run the required infrastructure (MongoDB and ActiveMQ) using Podman or Docker.
+El proyecto está configurado para correr en modo **100% autónomo** sin necesidad de instalaciones externas ni contenedores (Podman/Docker).
 
-### Start services
+- **MongoDB**: Se ejecuta de forma embebida usando Flapdoodle.
+- **JMS (ActiveMQ)**: Se ejecuta de forma embebida usando Artemis.
 
-```bash
-podman compose up -d
-```
-
-This will start:
-- **MongoDB**: `mongodb://localhost:27017/local`
-
-*(Nota: JMS ahora corre de forma **embebida** dentro de la aplicación, por lo que no es necesario levantarlo externamente).*
+No es necesario ejecutar `podman compose`. Simplemente inicia la aplicación.
 
 ## Run
 

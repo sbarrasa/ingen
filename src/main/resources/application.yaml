@@ -1,3 +1,7 @@
 spring:
   application:
     name: spring-boot
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin

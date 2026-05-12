@@ -1,5 +1,6 @@
-package com.accenture.springboot.controller;
+package com.accenture.springboot.api;
 
+import com.accenture.springboot.hello.api.HelloController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

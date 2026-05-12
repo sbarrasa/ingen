@@ -1,10 +1,8 @@
-package com.accenture.springboot.service;
+package com.accenture.springboot.user.service;
 
-import com.accenture.springboot.document.UserDocument;
-import com.accenture.springboot.dto.UserDto;
-import com.accenture.springboot.exception.UserAlreadyExistsException;
-import com.accenture.springboot.exception.UserNotFoundException;
-import com.accenture.springboot.repository.UserRepository;
+import com.accenture.springboot.user.domain.UserDocument;
+import com.accenture.springboot.user.api.UserDto;
+import com.accenture.springboot.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

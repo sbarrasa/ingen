@@ -2,25 +2,20 @@
 
 Java 21 REST API POC using Spring Boot, MongoDB, records and lambdas.
 
-## Requirements
+## Infrastructure (Local Development)
 
-- Java 21
-- Maven
-- MongoDB running locally
+The project includes a `compose.yaml` file to run the required infrastructure (MongoDB and ActiveMQ) using Podman or Docker.
 
-## MongoDB configuration
+### Start services
 
-The application connects to:
-
-```text
-mongodb://localhost:27017/local
+```bash
+podman compose up -d
 ```
 
-Collection:
+This will start:
+- **MongoDB**: `mongodb://localhost:27017/local`
 
-```text
-users
-```
+*(Nota: JMS ahora corre de forma **embebida** dentro de la aplicación, por lo que no es necesario levantarlo externamente).*
 
 ## Run
 
@@ -69,3 +64,10 @@ curl -X PUT http://localhost:8080/users/1 \
 ```bash
 curl -X DELETE http://localhost:8080/users/1
 ```
+
+## JMS Integration
+
+The application produces messages to the queue `user.updates.queue` on every create, update, or delete operation.
+
+- **Producer**: `JmsProducer.java` sends `UserEvent` objects as JSON.
+- **Consumer**: `OrchestratorConsumer.java` listens to the same queue and logs the received events.

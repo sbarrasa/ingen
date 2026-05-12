@@ -6,8 +6,6 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
-import java.util.Collections;
-
 @Configuration
 public class JmsConfig {
 
@@ -20,7 +18,8 @@ public class JmsConfig {
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
         // Optional: setup a type mapping if you want to be very specific
-        // converter.setTypeIdMappings(Collections.singletonMap("UserEvent", UserEvent.class));
+        // converter.setTypeIdMappings(Collections.singletonMap("UserEvent",
+        // UserEvent.class));
         return converter;
     }
 }

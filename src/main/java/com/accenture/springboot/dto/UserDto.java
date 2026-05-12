@@ -7,6 +7,11 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
+/**
+ * @param id
+ * @param name
+ * @param registrationDate
+ */
 public record UserDto(
         Integer id,
         @NotBlank String name,

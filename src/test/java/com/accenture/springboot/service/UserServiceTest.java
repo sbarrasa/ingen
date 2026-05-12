@@ -40,8 +40,8 @@ class UserServiceTest {
         List<UserDto> result = userService.getAll();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).id()).isEqualTo(1);
-        assertThat(result.get(0).name()).isEqualTo("Alice");
+        assertThat(result.getFirst().id()).isEqualTo(1);
+        assertThat(result.getFirst().name()).isEqualTo("Alice");
     }
 
     @Test

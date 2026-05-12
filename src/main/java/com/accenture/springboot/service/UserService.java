@@ -4,6 +4,8 @@ import com.accenture.springboot.document.UserDocument;
 import com.accenture.springboot.dto.UserDto;
 import com.accenture.springboot.exception.UserAlreadyExistsException;
 import com.accenture.springboot.exception.UserNotFoundException;
+import com.accenture.springboot.dto.UserEvent;
+import com.accenture.springboot.jms.JmsProducer;
 import com.accenture.springboot.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,11 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JmsProducer jmsProducer;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JmsProducer jmsProducer) {
         this.userRepository = userRepository;
+        this.jmsProducer = jmsProducer;
     }
 
     public List<UserDto> getAll() {
@@ -42,7 +46,9 @@ public class UserService {
             throw new UserAlreadyExistsException(id);
         }
 
-        return toDto(userRepository.save(toDocument(user)));
+        UserDto createdUser = toDto(userRepository.save(toDocument(user)));
+        jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_CREATE, createdUser));
+        return createdUser;
     }
 
     public UserDto update(Integer id, UserDto user) {
@@ -54,13 +60,20 @@ public class UserService {
                 ))
                 .map(userRepository::save)
                 .map(this::toDto)
+                .map(updatedUser -> {
+                    jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_UPDATE, updatedUser));
+                    return updatedUser;
+                })
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public void delete(Integer id) {
         userRepository.findById(id)
                 .ifPresentOrElse(
-                        userRepository::delete,
+                        user -> {
+                            userRepository.delete(user);
+                            jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_DELETE, toDto(user)));
+                        },
                         () -> {
                             throw new UserNotFoundException(id);
                         }

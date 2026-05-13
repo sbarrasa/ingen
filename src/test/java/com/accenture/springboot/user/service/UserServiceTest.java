@@ -4,7 +4,6 @@ import com.accenture.springboot.user.api.UserDto;
 import com.accenture.springboot.user.api.UserEvent;
 import com.accenture.springboot.user.domain.UserDocument;
 import com.accenture.springboot.user.domain.UserRepository;
-import com.accenture.springboot.user.jms.JmsProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

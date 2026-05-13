@@ -2,6 +2,7 @@ package com.accenture.springboot.user.jms;
 
 import com.accenture.springboot.user.api.UserDto;
 import com.accenture.springboot.user.api.UserEvent;
+import com.accenture.springboot.user.service.JmsProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

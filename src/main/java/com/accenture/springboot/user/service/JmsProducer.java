@@ -1,4 +1,4 @@
-package com.accenture.springboot.user.jms;
+package com.accenture.springboot.user.service;
 
 import com.accenture.springboot.user.api.UserEvent;
 import org.slf4j.Logger;

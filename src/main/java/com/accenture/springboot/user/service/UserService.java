@@ -4,7 +4,6 @@ import com.accenture.springboot.user.domain.UserDocument;
 import com.accenture.springboot.user.api.UserDto;
 import com.accenture.springboot.user.domain.UserRepository;
 import com.accenture.springboot.user.api.UserEvent;
-import com.accenture.springboot.user.jms.JmsProducer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class UserService {
     }
 
     public UserDto create(UserDto user) {
-        Integer id = user.id();
+        var id = user.id();
 
         if (id == null) {
             throw new IllegalArgumentException("User id is required");
@@ -44,8 +43,9 @@ public class UserService {
             throw new UserAlreadyExistsException(id);
         }
 
-        UserDto createdUser = toDto(userRepository.save(toDocument(user)));
+        var createdUser = toDto(userRepository.save(toDocument(user)));
         jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_CREATE, createdUser));
+
         return createdUser;
     }
 

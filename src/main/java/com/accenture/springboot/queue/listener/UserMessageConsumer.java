@@ -1,4 +1,4 @@
-package com.accenture.springboot.user.jms;
+package com.accenture.springboot.queue.listener;
 
 import com.accenture.springboot.user.api.UserEvent;
 import org.slf4j.Logger;
@@ -7,11 +7,11 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrchestratorConsumer {
+public class UserMessageConsumer {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrchestratorConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserMessageConsumer.class);
 
-    @JmsListener(destination = "${user.updates.queue}")
+    @JmsListener(destination = "user.updates.queue")
     public void consumeUserEvent(UserEvent event) {
         logger.info("ORCHESTRATOR RECEIVED: Action={}, User={}", event.action(), event.user());
         // In a real scenario, this would trigger other microservices or workflows

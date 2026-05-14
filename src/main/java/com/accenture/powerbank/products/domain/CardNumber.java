@@ -7,6 +7,7 @@ public record CardNumber(String value) {
         validateNotNull();
         validateNotEmpty();
         validateDigits();
+        validateLength();
     }
 
     private void validateDigits() {

@@ -3,18 +3,20 @@ package com.accenture.springboot.user.service;
 import com.accenture.springboot.user.domain.UserDocument;
 import com.accenture.springboot.user.api.UserDto;
 import com.accenture.springboot.user.domain.UserRepository;
+import com.accenture.springboot.user.api.UserEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JmsProducer jmsProducer;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JmsProducer jmsProducer) {
         this.userRepository = userRepository;
+        this.jmsProducer = jmsProducer;
     }
 
     public List<UserDto> getAll() {
@@ -24,9 +26,14 @@ public class UserService {
                 .toList();
     }
 
+    public UserDto getById(Integer id) {
+        return userRepository.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
 
     public UserDto create(UserDto user) {
-        Integer id = user.id();
+        var id = user.id();
 
         if (id == null) {
             throw new IllegalArgumentException("User id is required");
@@ -36,47 +43,50 @@ public class UserService {
             throw new UserAlreadyExistsException(id);
         }
 
-        return toDto(userRepository.save(toDocument(user)));
-    }
+        var createdUser = toDto(userRepository.save(toDocument(user)));
+        jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_CREATE, createdUser));
 
-    public UserDto getById(Integer id) {
-        return toDto(findUser(id));
+        return createdUser;
     }
 
     public UserDto update(Integer id, UserDto user) {
-        UserDocument updatedUser = new UserDocument(
-                id,
-                user.name(),
-                user.registrationDate()
-        );
-
-        return Optional.of(updatedUser)
+        return userRepository.findById(id)
+                .map(existingUser -> new UserDocument(
+                        existingUser.id(),
+                        user.name(),
+                        user.registrationDate()))
                 .map(userRepository::save)
                 .map(this::toDto)
+                .map(updatedUser -> {
+                    jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_UPDATE, updatedUser));
+                    return updatedUser;
+                })
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public void delete(Integer id) {
-        userRepository.delete(findUser(id));
+        userRepository.findById(id)
+                .ifPresentOrElse(
+                        user -> {
+                            userRepository.delete(user);
+                            jmsProducer.sendUserEvent(new UserEvent(UserEvent.ACTION_DELETE, toDto(user)));
+                        },
+                        () -> {
+                            throw new UserNotFoundException(id);
+                        });
     }
 
-    private UserDocument findUser(Integer id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-    }
     private UserDto toDto(UserDocument document) {
         return new UserDto(
                 document.id(),
                 document.name(),
-                document.registrationDate()
-        );
+                document.registrationDate());
     }
 
     private UserDocument toDocument(UserDto dto) {
         return new UserDocument(
                 dto.id(),
                 dto.name(),
-                dto.registrationDate()
-        );
+                dto.registrationDate());
     }
 }

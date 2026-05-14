@@ -1,3 +1,18 @@
 spring:
   application:
-    name: spring-boot
+    name: user-api-mongodb-english
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/local
+      database: local
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+
+server:
+  port: 8080
+
+user:
+  updates:
+    queue: user.updates.queue

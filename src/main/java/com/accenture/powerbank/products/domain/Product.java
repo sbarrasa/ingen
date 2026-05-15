@@ -1,7 +1,7 @@
 package com.accenture.powerbank.products.domain;
 
 public sealed interface Product
-        permits Account, Card, CreditAccount, CreditCard, DebitCard, SavingAccount {
+        permits Account, Card, CreditCard, DebitCard, SavingAccount, CreditAccount  {
 
     default String id() {
         return switch (this) {

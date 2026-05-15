@@ -1,13 +1,14 @@
 package com.accenture.powerbank.products.domain;
 
 import com.accenture.powerbank.common.domain.Currency;
-import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 
 public class ProductTest {
     static List<Product> products = List.of(
@@ -19,15 +20,6 @@ public class ProductTest {
                     LocalDate.now(),
                     LocalDate.now().plusYears(5),
                     100000.0
-            ),
-            new CreditCard(
-                    new CardNumber("5555666677778888"),
-                    Brand.MC,
-                    "Black",
-                    456,
-                    LocalDate.now(),
-                    LocalDate.now().plusYears(5),
-                    200000.0
             ),
             new DebitCard(
                     new CardNumber("9999000011112222"),
@@ -49,18 +41,24 @@ public class ProductTest {
             )
     );
 
-
-
     @Test
-    void getProductId(){
+    void getIdForCard(){
 
         Product product = products.getFirst();
         var id = product.id();
 
         assertEquals("1111222233334444", id);
-
-
     }
+
+    @Test
+    void getIdForAccount(){
+
+        Product product = products.getLast();
+        var id = product.id();
+
+        assertEquals("9999999999999999999999", id);
+    }
+
 
     @Test
     void product() {

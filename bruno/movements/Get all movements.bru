@@ -1,0 +1,30 @@
+meta {
+  name: Get all movements
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "amount": 1500.50,
+      "currency": "ARS",
+      "accountId": 10,
+      "type": "TRANSFER",
+      "productId": "SKU-ABC-001"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

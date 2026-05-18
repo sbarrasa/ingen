@@ -17,9 +17,11 @@ public class MovementService {
     private static final String DEFAULT_STATUS_REASON = "Movement created";
 
     private final MovementRepository movementRepository;
+    private final MovementJmsProducer movementJmsProducer;
 
-    public MovementService(MovementRepository movementRepository) {
+    public MovementService(MovementRepository movementRepository, MovementJmsProducer movementJmsProducer) {
         this.movementRepository = movementRepository;
+        this.movementJmsProducer = movementJmsProducer;
     }
 
     public List<MovementResponse> getAll() {
@@ -48,7 +50,9 @@ public class MovementService {
         movement.setStatusReason(DEFAULT_STATUS_REASON);
         movement.setMovementType(request.type());
 
-        return toResponse(movementRepository.save(movement));
+        Movement savedMovement = movementRepository.save(movement);
+        movementJmsProducer.sendMovementRequested(savedMovement);
+        return toResponse(savedMovement);
     }
 
     private MovementResponse toResponse(Movement movement) {

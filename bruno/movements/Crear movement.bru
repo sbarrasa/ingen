@@ -5,13 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:8080/movements
+  url: {{host}}movements
   body: json
   auth: inherit
 }
 
 headers {
   Content-Type: application/json
+  X-Github-Token: {{GITHUB_TOKEN}}
 }
 
 body:json {

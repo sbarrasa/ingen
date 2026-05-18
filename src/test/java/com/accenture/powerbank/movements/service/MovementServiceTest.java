@@ -7,23 +7,39 @@ import com.accenture.powerbank.movements.domain.Movement;
 import com.accenture.powerbank.movements.domain.MovementRepository;
 import com.accenture.powerbank.movements.domain.MovementState;
 import com.accenture.powerbank.movements.domain.MovementType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class MovementServiceTest {
 
-    private final MovementRepository movementRepository = mock(MovementRepository.class);
+    @Mock
+    private MovementRepository movementRepository;
 
-    private final MovementService movementService = new MovementService(movementRepository);
+    @Mock
+    private MovementJmsProducer movementJmsProducer;
+
+    private MovementService movementService;
+
+    @BeforeEach
+    void setUp() {
+        movementService = new MovementService(movementRepository, movementJmsProducer);
+    }
 
     @Test
     void getAll_ShouldReturnMappedResponses() {
@@ -84,6 +100,7 @@ class MovementServiceTest {
         assertEquals(MovementState.CREATED, response.state());
         assertEquals("Movement created", response.statusReason());
         assertEquals(MovementType.REFUND, response.movementType());
+        verify(movementJmsProducer).sendMovementRequested(persisted);
     }
 
     private Movement movementEntity(Long id, Long accountId, String productId, MovementType type) {

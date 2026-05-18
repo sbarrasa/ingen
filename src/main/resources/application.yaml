@@ -25,3 +25,7 @@ server:
 user:
   updates:
     queue: user.updates.queue
+
+movement:
+  requests:
+    queue: movement.requests.queue

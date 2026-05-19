@@ -1,0 +1,30 @@
+meta {
+  name: Crear movement - Tipo invalido
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "amount": 1500.50,
+      "currency": "ARS",
+      "accountId": 10,
+      "type": "TRANSFER",
+      "productId": "SKU-ABC-001"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

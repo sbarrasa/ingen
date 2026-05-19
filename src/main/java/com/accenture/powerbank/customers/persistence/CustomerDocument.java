@@ -39,6 +39,9 @@ public class CustomerDocument {
         this.updatedAt = updatedAt;
     }
 
+    public CustomerDocument(String s, String sergio, String rozenberg, String number) {
+    }
+
     public String getId() {
         return id;
     }

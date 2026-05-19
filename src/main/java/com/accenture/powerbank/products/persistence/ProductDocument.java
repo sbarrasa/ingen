@@ -27,7 +27,7 @@ public class ProductDocument {
     @LastModifiedDate
     private Instant updatedAt;
 
-    public ProductDocument() {
+    public ProductDocument(String s, String string, ProductType debitCard, String mainDebitCard) {
     }
 
     public ProductDocument(String id, String customerId, List<ProductItem> products, Instant createdAt, Instant updatedAt) {

@@ -34,7 +34,7 @@ public class ProductRequest {
     @JsonProperty("active")
     private Boolean active;
 
-    public ProductRequest() {
+    public ProductRequest(String s, ProductType debitCard, String mainDebitCard) {
     }
 
     public ProductRequest(String customerId, List<ProductItem> products, ProductType type, String name, String description, Boolean active) {

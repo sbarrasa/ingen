@@ -34,9 +34,7 @@ public final class CustomerMapper {
                 document.getId(),
                 document.getNames(),
                 document.getLastNames(),
-                document.getCuit(),
-                document.getCreatedAt(),
-                document.getUpdatedAt()
+                document.getCuit()
         );
     }
 

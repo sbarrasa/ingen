@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "**" ] # Se ejecuta en todas las ramas al hacer push
   pull_request:
-    branches: [ "main" ] # Se ejecuta al abrir un PR hacia main
+    branches: [ "main","demo" ] # Se ejecuta al abrir un PR hacia main y demo
 
 jobs:
   build:

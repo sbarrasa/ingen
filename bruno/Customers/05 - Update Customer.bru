@@ -1,0 +1,37 @@
+meta {
+  name: 05 - Update Customer
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/api/v1/customers/{{customerId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "names": "Sergio Updated",
+    "lastNames": "Rozenberg",
+    "cuit": "{{cuit}}"
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+
+  test("customer was updated", function () {
+    expect(body.names).to.equal("Sergio Updated");
+  });
+}

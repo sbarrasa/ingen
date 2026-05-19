@@ -1,0 +1,50 @@
+meta {
+  name: 07 - Update Product Document
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/api/v1/products/{{productId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "customerId": "{{customerId}}",
+    "products": [
+      {
+        "type": "DEBIT_CARD",
+        "name": "Updated Debit Card",
+        "description": "Updated product document with valid enum type",
+        "active": true
+      },
+      {
+        "type": "CREDIT_CARD",
+        "name": "Updated Credit Card",
+        "description": "Updated credit product",
+        "active": true
+      }
+    ]
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+
+  test("product document was updated", function () {
+    expect(body.products[0].name).to.equal("Updated Debit Card");
+    expect(body.products[0].type).to.equal("DEBIT_CARD");
+  });
+}

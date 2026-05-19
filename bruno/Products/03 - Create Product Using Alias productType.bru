@@ -1,0 +1,55 @@
+meta {
+  name: 03 - Create Product Using Alias productType
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/v1/products
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "customerId": "{{customerId}}",
+    "products": [
+      {
+        "productType": "CREDIT_ACCOUNT",
+        "name": "Credit Account",
+        "description": "Compatibility test using productType alias",
+        "active": true
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  customerId: 6a0c8d7ba136592e2e396b6f
+  baseUrl: http://localhost:8080
+}
+
+script:post-response {
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  if (body && body.id) {
+    bru.setEnvVar('productId', body.id);
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 201", function () {
+    expect(status).to.equal(201);
+  });
+  
+  test("productType alias is deserialized and serialized as type", function () {
+    expect(body.products[0].type).to.equal("CREDIT_ACCOUNT");
+  });
+}

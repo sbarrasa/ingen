@@ -1,0 +1,28 @@
+meta {
+  name: 05 - Get Product By Id
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/v1/products/{{productId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+
+  test("product document id matches environment variable", function () {
+    expect(body.id).to.equal(bru.getEnvVar('productId'));
+  });
+}

@@ -1,0 +1,28 @@
+meta {
+  name: 06 - Get Products By Customer
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/api/v1/products/customer/{{customerId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+
+  test("response is an array", function () {
+    expect(body).to.be.an("array");
+  });
+}

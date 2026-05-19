@@ -1,0 +1,56 @@
+meta {
+  name: 01 - Create Customer
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/customers
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "names": "Sergio",
+    "lastNames": "Rozenberg",
+    "cuit": "{{cuit}}"
+  }
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:8080
+  cuit: 20123456784
+}
+
+script:post-response {
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  if (body && body.id) {
+    bru.setEnvVar('customerId', body.id);
+  }
+  if (body && body.cuit) {
+    bru.setEnvVar('cuit', body.cuit);
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 201", function () {
+    expect(status).to.equal(201);
+  });
+  
+  test("response has customer id", function () {
+    expect(body.id).to.not.be.undefined;
+  });
+  
+  test("response contains cuit", function () {
+    expect(body.cuit).to.equal(bru.getEnvVar('cuit'));
+  });
+}

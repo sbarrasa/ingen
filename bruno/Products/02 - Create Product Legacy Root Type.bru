@@ -1,0 +1,51 @@
+meta {
+  name: 02 - Create Product Legacy Root Type
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/v1/products
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "customerId": "{{customerId}}",
+    "type": "CREDIT_CARD",
+    "name": "Gold Credit Card",
+    "description": "Backward-compatible root-level product payload",
+    "active": true
+  }
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:8080
+  customerId: 6a0c8d7ba136592e2e396b6f
+}
+
+script:post-response {
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  if (body && body.id) {
+    bru.setEnvVar('productId', body.id);
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 201", function () {
+    expect(status).to.equal(201);
+  });
+  
+  test("root-level type is serialized as CREDIT_CARD", function () {
+    expect(body.products[0].type).to.equal("CREDIT_CARD");
+  });
+}

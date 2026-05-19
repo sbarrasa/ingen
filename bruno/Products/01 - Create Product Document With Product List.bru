@@ -1,0 +1,67 @@
+meta {
+  name: 01 - Create Product Document With Product List
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/products
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:json {
+  {
+    "customerId": "{{customerId}}",
+    "products": [
+      {
+        "type": "DEBIT_CARD",
+        "name": "Main Debit Card",
+        "description": "Salary account debit card",
+        "active": true
+      },
+      {
+        "type": "SAVING_ACCOUNT",
+        "name": "Main Saving Account",
+        "description": "Primary saving account",
+        "active": true
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  customerId: 6a0c8d7ba136592e2e396b6f
+  baseUrl: http://localhost:8080
+}
+
+script:post-response {
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  if (body && body.id) {
+    bru.setEnvVar('productId', body.id);
+  }
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 201", function () {
+    expect(status).to.equal(201);
+  });
+  
+  test("product document has id", function () {
+    expect(body.id).to.not.be.undefined;
+  });
+  
+  test("products list was serialized correctly", function () {
+    expect(body.products).to.be.an("array");
+    expect(body.products[0].type).to.equal("DEBIT_CARD");
+    expect(body.products[1].type).to.equal("SAVING_ACCOUNT");
+  });
+}

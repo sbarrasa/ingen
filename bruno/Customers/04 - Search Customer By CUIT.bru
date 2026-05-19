@@ -1,0 +1,33 @@
+meta {
+  name: 04 - Search Customer By CUIT
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/v1/customers/search?cuit={{cuit}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:8080
+  cuit: 20123456784
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+  
+  test("customer cuit matches environment variable", function () {
+    expect(body.cuit).to.equal(bru.getEnvVar('cuit'));
+  });
+}

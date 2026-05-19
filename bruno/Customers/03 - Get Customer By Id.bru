@@ -1,0 +1,33 @@
+meta {
+  name: 03 - Get Customer By Id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/v1/customers/{{customerId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  customerId: 6a0c8d7ba136592e2e396b6f
+  baseUrl: http://localhost:8080
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+  const body = typeof res.getBody === 'function' ? res.getBody() : res.body;
+  
+  test("status is 200", function () {
+    expect(status).to.equal(200);
+  });
+  
+  test("customer id matches environment variable", function () {
+    expect(body.id).to.equal(bru.getEnvVar('customerId'));
+  });
+}

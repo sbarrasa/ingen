@@ -1,0 +1,19 @@
+meta {
+  name: 08 - Delete Product
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/api/v1/products/{{productId}}
+  body: none
+  auth: none
+}
+
+tests {
+  const status = typeof res.getStatus === 'function' ? res.getStatus() : res.status;
+
+  test("status is 204", function () {
+    expect(status).to.equal(204);
+  });
+}
